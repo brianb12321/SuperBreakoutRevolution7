@@ -16,7 +16,9 @@ import com.sbr7.core.GameDetails;
  */
 public class TitleScreen implements Screen {
     private Sprite _title;
+    private Sprite _backgroundSprite;
     private Texture _titleTexture;
+    private Texture _background;
     private SpriteBatch batch;
     private OrthographicCamera camera;
     public TitleScreen(SpriteBatch sb, OrthographicCamera c) {
@@ -27,8 +29,11 @@ public class TitleScreen implements Screen {
     public void show() {
         _titleTexture = new Texture("img/sbr7Title.png");
         _title = new Sprite(_titleTexture);
+        _background = new Texture("img/background.jpg");
+        _backgroundSprite = new Sprite(_background);
         batch.setProjectionMatrix(camera.combined);
         _title.setSize(GameDetails.WIDTH, GameDetails.HEIGHT - 10);
+        _backgroundSprite.setSize(GameDetails.WIDTH, GameDetails.HEIGHT);
     }
 
     @Override
@@ -37,6 +42,7 @@ public class TitleScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
         batch.begin();
+        _backgroundSprite.draw(batch);
         _title.draw(batch);
         batch.end();
     }
