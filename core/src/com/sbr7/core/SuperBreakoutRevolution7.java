@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.sbr7.core.screens.LevelScreen;
 import com.sbr7.core.screens.TitleScreen;
 
 public class SuperBreakoutRevolution7 extends Game {
@@ -15,7 +16,7 @@ public class SuperBreakoutRevolution7 extends Game {
             batch = new SpriteBatch();
             camera = new OrthographicCamera();
             camera.setToOrtho(false, GameDetails.WIDTH, GameDetails.HEIGHT);
-            super.setScreen(new TitleScreen(batch, camera));
+            super.setScreen(new LevelScreen(batch, camera, "raw/level1.tmx"));
 	}
 
 	@Override

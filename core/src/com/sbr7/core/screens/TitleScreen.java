@@ -19,8 +19,8 @@ public class TitleScreen implements Screen {
     private Sprite _backgroundSprite;
     private Texture _titleTexture;
     private Texture _background;
-    private SpriteBatch batch;
-    private OrthographicCamera camera;
+    private final SpriteBatch batch;
+    private final OrthographicCamera camera;
     public TitleScreen(SpriteBatch sb, OrthographicCamera c) {
         batch = sb;
         camera = c;
