@@ -13,8 +13,11 @@ public class GameDetails {
     public static final String TITLE = "Super Breakout Revolution 7";
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
-    public static final float PPM = 32f;
-    public static float normalize(int value) {
-        return value / 32;
+    public static final float PPM = 100f;
+    public static float scaleDown(float value) {
+        return value / PPM;
+    }
+    public static float scaleUp(float value) {
+        return value * PPM;
     }
 }

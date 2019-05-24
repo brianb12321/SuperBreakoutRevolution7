@@ -13,16 +13,14 @@ public class SuperBreakoutRevolution7 extends Game {
 
         private SpriteBatch batch;
         private OrthographicCamera camera;
-        private World world;
+        private ResourceManager manager;
 	@Override
 	public void create () {
-            //Set gravity to earth.
-            Vector2 gravity = new Vector2(0, -9.8f);
-            world = new World(gravity, false);
+            manager = new ResourceManager();
             batch = new SpriteBatch();
             camera = new OrthographicCamera();
             camera.setToOrtho(false, GameDetails.WIDTH, GameDetails.HEIGHT);
-            super.setScreen(new LevelScreen(batch, camera, "raw/level1.tmx", world));
+            super.setScreen(new LevelScreen(batch, "raw/level1.tmx", manager));
 	}
 
 	@Override
