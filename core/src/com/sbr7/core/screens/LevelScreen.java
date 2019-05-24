@@ -36,6 +36,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.sbr7.core.GameDetails;
 import com.sbr7.core.ResourceManager;
+import com.sbr7.core.objects.Player;
 
 /**
  *
@@ -51,8 +52,8 @@ public class LevelScreen implements Screen {
     private Box2DDebugRenderer debugRend;
     private OrthographicCamera gameCamera;
     private OrthographicCamera debugCamera;
+    private Player player;
     private ResourceManager manager;
-    private Sprite paddleSprite;
     public LevelScreen(SpriteBatch sb, String map, ResourceManager m) {
         gameCamera = new OrthographicCamera();
         debugCamera = new OrthographicCamera();
@@ -62,15 +63,12 @@ public class LevelScreen implements Screen {
         batch = sb;
         mapToLoad = map;
         debugRend = new Box2DDebugRenderer();
-        world = new World(gravity, false);
+        world = new World(gravity, true);
     }
     @Override
     public void show() {
         manager.add("paddle", "img/paddleNormal.png");
-        paddleSprite = new Sprite(manager.get("paddle"));
-        paddleSprite.setSize(128, 32);
-        //Center the paddle.
-        paddleSprite.setPosition(GameDetails.WIDTH / 2 - paddleSprite.getWidth(), 0);
+        manager.add("ball", "img/ballNormal.png");
         gameCamera.setToOrtho(false, GameDetails.WIDTH, GameDetails.HEIGHT);
         debugCamera.setToOrtho(false, GameDetails.scaleDown(GameDetails.WIDTH), GameDetails.scaleDown(GameDetails.HEIGHT));
         map = new TmxMapLoader().load(mapToLoad);
@@ -78,9 +76,23 @@ public class LevelScreen implements Screen {
         //===============================
         //Configure physics
         createBlock((TiledMapTileLayer)map.getLayers().get("blocks"));
-        //createBall();
+        createPaddle();
+        createBall();
+        player.getBallBody().applyForceToCenter(new Vector2(0, 12000), true);
     }
-
+    private void createPaddle() {
+        BodyDef def = new BodyDef();
+        def.type = BodyType.StaticBody;
+        PolygonShape shape = new PolygonShape();
+        FixtureDef fixDef = new FixtureDef();
+        fixDef.friction = 0;
+        def.position.set(new Vector2(GameDetails.scaleDown(GameDetails.WIDTH / 2), GameDetails.scaleDown(0)));
+        shape.setAsBox(GameDetails.scaleDown(64), GameDetails.scaleDown(16));
+        fixDef.shape = shape;
+        Body b = world.createBody(def);
+        b.createFixture(fixDef);
+        player = new Player(b, manager);
+    }
     @Override
     public void render(float f) {
         Gdx.gl.glClearColor(0, 0, 0, 0);
@@ -90,7 +102,6 @@ public class LevelScreen implements Screen {
         
         renderer.setView(gameCamera);
         batch.setProjectionMatrix(gameCamera.combined);
-        
         //Some arbitrary values. Doesn't really matter right now.
         world.step(f, 6, 2);
         //=================
@@ -98,10 +109,8 @@ public class LevelScreen implements Screen {
         
         
         gameCamera.update();
-        renderer.render();
-        batch.begin();
-        paddleSprite.draw(batch);
-        batch.end();
+        //renderer.render();
+        player.render(batch);
         debugRend.render(world, debugCamera.combined);
     }
 
@@ -133,11 +142,15 @@ public class LevelScreen implements Screen {
         BodyDef def = new BodyDef();
         def.type = BodyType.DynamicBody;
         FixtureDef fixDef = new FixtureDef();
+        fixDef.friction = 0;
+        fixDef.restitution = 1.0f;
         CircleShape circle = new CircleShape();
-        circle.setRadius(2);
-        def.position.set(GameDetails.scaleDown(25), 0);
+        circle.setRadius(GameDetails.scaleDown(16));
+        def.position.set(player.getX(), player.getY() + GameDetails.scaleDown(32));
         fixDef.shape = circle;
-        world.createBody(def).createFixture(fixDef);
+        Body b = world.createBody(def);
+        b.createFixture(fixDef);
+        player.setBallBody(b);
     }
     public void createBlock(TiledMapTileLayer layer) {
         float tileSize = layer.getTileWidth();

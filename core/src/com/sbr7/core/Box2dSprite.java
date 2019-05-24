@@ -16,8 +16,10 @@ import com.badlogic.gdx.physics.box2d.Body;
 public class Box2dSprite {
     protected Body body;
     protected Texture texture;
-    public Box2dSprite(Body b, Texture t) {
+    public Box2dSprite(Body b) {
         body = b;
+    }
+    public void setTexture(Texture t) {
         texture = t;
     }
     public void render(SpriteBatch sb) {
@@ -27,5 +29,14 @@ public class Box2dSprite {
     }
     public Body getBody() {
         return body;
+    }
+    public float getHeight() {
+        return texture.getHeight();
+    }
+    public float getX() {
+        return body.getPosition().x;
+    }
+    public float getY() {
+        return body.getPosition().y;
     }
 }
