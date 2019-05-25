@@ -6,13 +6,14 @@
 package com.sbr7.core;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.utils.Disposable;
 import java.util.HashMap;
 
 /**
  *
  * @author gamec
  */
-public class ResourceManager {
+public class ResourceManager implements Disposable {
     private HashMap<String, Texture> _textures;
     public ResourceManager() {
         _textures = new HashMap<String, Texture>();
@@ -25,5 +26,12 @@ public class ResourceManager {
     }
     public void dispose(String name) {
         _textures.get(name).dispose();
+    }
+
+    @Override
+    public void dispose() {
+        for(Texture t : _textures.values()) {
+            t.dispose();
+        }
     }
 }

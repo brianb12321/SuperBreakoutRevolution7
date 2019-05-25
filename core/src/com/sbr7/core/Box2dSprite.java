@@ -8,12 +8,13 @@ package com.sbr7.core;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.utils.Disposable;
 
 /**
  *
  * @author gamec
  */
-public class Box2dSprite {
+public class Box2dSprite implements Disposable {
     protected Body body;
     protected Texture texture;
     public Box2dSprite(Body b) {
@@ -24,7 +25,7 @@ public class Box2dSprite {
     }
     public void render(SpriteBatch sb) {
         sb.begin();
-        sb.draw(texture, GameDetails.scaleUp(body.getPosition().x) - texture.getWidth() / 2, GameDetails.scaleUp(body.getPosition().y) - texture.getHeight() / 2);
+        sb.draw(texture, getTextureX(), getTextureY());
         sb.end();
     }
     public Body getBody() {
@@ -36,7 +37,21 @@ public class Box2dSprite {
     public float getX() {
         return body.getPosition().x;
     }
+    public float getTextureX() {
+        return GameDetails.scaleUp(body.getPosition().x) - texture.getWidth() / 2;
+    }
+    public float getTextureY() {
+        return GameDetails.scaleUp(body.getPosition().y) - texture.getHeight() / 2;
+    }
     public float getY() {
         return body.getPosition().y;
+    }
+    public void update(float dt) {
+        
+    }
+
+    @Override
+    public void dispose() {
+        texture.dispose();
     }
 }
