@@ -54,7 +54,7 @@ public class BlockCollisionDetector implements ContactListener {
                         player.setHealth(hp);
                     }
                     else if(type.equals(Block.BLOCK_EXPLOSION)) {
-                        manager.getSfx("explosion").play();
+                        manager.playSfx("explosion");
                         int max = (Integer)b.getCell().getTile().getProperties().get("NumOfAffectedBlocks");
                         for(int i = 0; i < max; i++) {
                             Block affectedBlock = blocks.get((int)(Math.random() * blocks.size));
@@ -63,7 +63,7 @@ public class BlockCollisionDetector implements ContactListener {
                     }
                 }
                 if(remove) blocksToRemove.add(b);
-                manager.getSfx("hit").play();
+                manager.playSfx("hit");
             }
         }
     }
