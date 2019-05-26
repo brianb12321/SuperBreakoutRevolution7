@@ -28,17 +28,12 @@ public class Player extends Box2dSprite {
     private Body ballBody;
     private Texture ballTexture;
     private boolean isAttached = true;
-    private int lives = 999;
-    private BitmapFont font;
-    private float totalTime;
-    private BitmapFont timerFont;
+    private int lives = GameDetails.STARTING_LIVES;
     public Player(Body b, ResourceManager manager) {
         super(b);
         Texture paddleTexture = manager.getTexture("paddle");
         ballTexture = manager.getTexture("ball");
         setTexture(paddleTexture);
-        font = new BitmapFont();
-        timerFont = new BitmapFont();
     }
     @Override
     public void render(SpriteBatch b) {
@@ -48,13 +43,10 @@ public class Player extends Box2dSprite {
             ballBody.setTransform(getX(), getY() + GameDetails.scaleDown(32), ballBody.getAngle());
         }
         b.draw(ballTexture, GameDetails.scaleUp(ballBody.getPosition().x) - ballTexture.getWidth() / 2, GameDetails.scaleUp(ballBody.getPosition().y) - ballTexture.getHeight() / 2);
-        timerFont.draw(b, "" + ((int)totalTime / 60) + ":" + ((int)totalTime % 60), GameDetails.WIDTH - 32, 16);
-        font.draw(b, "Lives: " + lives, 8, 16);
         b.end();
     }
     @Override
     public void update(float dt) {
-        totalTime += dt;
         if(ballBody.getPosition().y < -2) {
             ballBody.setLinearVelocity(0, 0);
             ballBody.setType(BodyDef.BodyType.KinematicBody);

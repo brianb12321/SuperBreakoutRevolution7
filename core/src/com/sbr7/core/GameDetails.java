@@ -14,6 +14,8 @@ public class GameDetails {
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 864;
     public static final float PPM = 100f;
+    public static final int STARTING_LIVES = 7;
+    public static final int MIN_LIVES_TIL_WARNING = 5;
     public static float scaleDown(float value) {
         return value / PPM;
     }

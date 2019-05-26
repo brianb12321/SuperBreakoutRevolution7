@@ -31,10 +31,10 @@ public class BlockCollisionDetector implements ContactListener {
         Fixture fa = cntct.getFixtureA();
         Fixture fb = cntct.getFixtureB();
         Block b = null;
-        if(fa != null && fa.getUserData() instanceof Block) {
+        if(fa != null && fa.getUserData() instanceof Block && (fb != null && fb.getFilterData().categoryBits == CollisionBits.BALL)) {
             b = (Block)fa.getUserData();
         }
-        else if(fb != null && fb.getUserData() instanceof Block) {
+        else if(fb != null && fb.getUserData() instanceof Block && (fa != null && fa.getFilterData().categoryBits == CollisionBits.BALL)) {
             b = (Block)fb.getUserData();
         }
         if(b != null) {

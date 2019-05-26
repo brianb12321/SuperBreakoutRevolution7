@@ -8,9 +8,9 @@ package com.sbr7.core.screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -30,13 +30,16 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Timer;
 import com.sbr7.core.Block;
 import com.sbr7.core.BlockCollisionDetector;
 import com.sbr7.core.CollisionBits;
 import com.sbr7.core.GameDetails;
 import com.sbr7.core.GameInputProcessor;
+import com.sbr7.core.Hud;
+import com.sbr7.core.LevelState;
+import com.sbr7.core.LevelStateManager;
 import com.sbr7.core.ResourceManager;
+import com.sbr7.core.StateRunnable;
 import com.sbr7.core.objects.Player;
 
 /**
@@ -53,14 +56,20 @@ public class LevelScreen implements Screen {
     private Box2DDebugRenderer debugRend;
     private OrthographicCamera gameCamera;
     private OrthographicCamera debugCamera;
+    private OrthographicCamera hudCam;
+    private final LevelStateManager stateManager;
+    private Hud hud;
     private Player player;
     private ResourceManager manager;
     private Array<Block> blocks;
     private BlockCollisionDetector cd;
+    private String musicName;
     private int levelNumber;
-    public LevelScreen(SpriteBatch sb, ResourceManager m, OrthographicCamera cam, int ln) {
+    public LevelScreen(SpriteBatch sb, ResourceManager m, OrthographicCamera cam, int ln, LevelStateManager lm) {
         gameCamera = cam;
+        stateManager = lm;
         debugCamera = new OrthographicCamera();
+        hudCam = new OrthographicCamera();
         blocks = new Array<Block>();
         manager = m;
         levelNumber = ln;
@@ -73,7 +82,22 @@ public class LevelScreen implements Screen {
     }
     @Override
     public void show() {
+        stateManager.addHandler(LevelState.NORMAL, new StateRunnable() {
+            @Override
+            public void run(LevelState previousStates) {
+                manager.getPlayingMusic().stop();
+                if(musicName != null && !musicName.equals("")) {
+                    manager.getMusic(musicName).play();
+                }
+            }
+            @Override
+            public void transitionOut() {
+                
+            }
+        });
+        stateManager.transitionState(LevelState.NORMAL);
         debugCamera.setToOrtho(false, GameDetails.scaleDown(GameDetails.WIDTH), GameDetails.scaleDown(GameDetails.HEIGHT));
+        hudCam.setToOrtho(false, GameDetails.WIDTH, GameDetails.HEIGHT);
         map = new TmxMapLoader().load(mapToLoad);
         configureMusic();
         renderer = new OrthogonalTiledMapRenderer(map);
@@ -85,29 +109,28 @@ public class LevelScreen implements Screen {
         createFloor();
         createPaddle();
         cd = new BlockCollisionDetector(manager, player, blocks);
+        hud = new Hud(hudCam, player, stateManager);
         world.setContactListener(cd);
         createBall();
-        Gdx.input.setInputProcessor(new GameInputProcessor(player, manager));
+        Gdx.input.setInputProcessor(new GameInputProcessor(player, manager, stateManager));
     }
     private void configureMusic() {
         if(map.getProperties().containsKey("LevelType")) {
             String type = map.getProperties().get("LevelType").toString();
             if(type.equals("Dangerous")) {
-                manager.getPlayingMusic().stop();
-                manager.getMusic("bgDangerous").setLooping(true);
-                manager.getMusic("bgDangerous").play();
+                musicName = "bgDangerous";
             }
             else {
-                manager.getPlayingMusic().stop();
-                manager.getMusic("bg1").setLooping(true);
-                manager.getMusic("bg1").play();
+                musicName = "bg1";
             }
         }
         else {
-            manager.getPlayingMusic().stop();
-            manager.getMusic("bg1").setLooping(true);
-            manager.getMusic("bg1").play();
+            musicName = "bg1";
         }
+        manager.getPlayingMusic().stop();
+        Music m = manager.getMusic(musicName);
+        m.setLooping(true);
+        m.play();
     }
     
     private void createPaddle() {
@@ -157,18 +180,20 @@ public class LevelScreen implements Screen {
         removeBlocks();
         checkWinCondition();
         player.update(f);
+        hud.update(f);
         //=================
         //Begin rendering
 
         gameCamera.update();
         renderer.render();
         player.render(batch);
+        hud.render(batch);
         //debugRend.render(world, debugCamera.combined);
     }
     private void checkWinCondition() {
         //If true, we won!!!
         if(blocks.size == 0) {
-            ((Game)Gdx.app.getApplicationListener()).setScreen(new ResultScreen(levelNumber, manager, gameCamera, batch));
+            ((Game)Gdx.app.getApplicationListener()).setScreen(new ResultScreen(levelNumber, manager, gameCamera, batch, stateManager));
         }
         else if(player.getNumOfLives() <= 0) {
             ((Game)Gdx.app.getApplicationListener()).setScreen(new GameOverScreen());
@@ -214,6 +239,7 @@ public class LevelScreen implements Screen {
         map.dispose();
         batch.dispose();
         player.dispose();
+        hud.dispose();
         world.dispose();
         manager.dispose();
     }

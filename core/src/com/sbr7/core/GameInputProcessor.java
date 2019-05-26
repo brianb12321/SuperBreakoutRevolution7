@@ -20,9 +20,11 @@ public class GameInputProcessor implements InputProcessor {
     private final float speed = GameDetails.scaleDown(700);
     private final float turboSpeed = GameDetails.scaleDown(12000);
     private final ResourceManager manager;
-    public GameInputProcessor(Player p, ResourceManager m) {
+    private final LevelStateManager stateManager;
+    public GameInputProcessor(Player p, ResourceManager m, LevelStateManager lm) {
         player = p;
         manager = m;
+        stateManager = lm;
     }
     @Override
     public boolean keyDown(int i) {
@@ -44,8 +46,14 @@ public class GameInputProcessor implements InputProcessor {
             Gdx.app.exit();
         }
         if(i == Keys.M) {
-            manager.getPlayingMusic().stop();
-            manager.getPlayingMusic().play();
+            if(stateManager.getCurrentState() == LevelState.NORMAL) {
+                manager.getPlayingMusic().stop();
+                manager.getPlayingMusic().play();
+                
+            }
+        }
+        if(i == Keys.H) {
+            player.setHealth(900);
         }
         return true;
     }
