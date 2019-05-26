@@ -12,7 +12,7 @@ package com.sbr7.core;
 public class GameDetails {
     public static final String TITLE = "Super Breakout Revolution 7";
     public static final int WIDTH = 1280;
-    public static final int HEIGHT = 720;
+    public static final int HEIGHT = 864;
     public static final float PPM = 100f;
     public static float scaleDown(float value) {
         return value / PPM;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.2" tiledversion="1.2.4" name="blockTileSet" tilewidth="130" tileheight="34" tilecount="7" columns="0">
+<tileset version="1.2" tiledversion="1.2.4" name="blockTileSet" tilewidth="34" tileheight="34" tilecount="10" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <image width="34" height="34" source="../img/blocks/redBlock.png"/>
@@ -10,16 +10,42 @@
  <tile id="2">
   <image width="34" height="34" source="../img/blocks/greenBlock.png"/>
  </tile>
- <tile id="3">
-  <image width="130" height="34" source="../img/paddleNormal.png"/>
- </tile>
- <tile id="5">
-  <image width="32" height="32" source="../img/ballNormal.png"/>
- </tile>
  <tile id="6">
   <image width="34" height="34" source="../img/blocks/wallBlocks.png"/>
  </tile>
  <tile id="7">
   <image width="34" height="34" source="../img/blocks/floorBlocks.png"/>
+ </tile>
+ <tile id="9">
+  <properties>
+   <property name="DPTolerance" type="int" value="3"/>
+  </properties>
+  <image width="34" height="34" source="../img/blocks/yelloBlock.png"/>
+ </tile>
+ <tile id="10">
+  <properties>
+   <property name="BlockType" value="Death"/>
+  </properties>
+  <image width="34" height="34" source="../img/blocks/deathBlock.png"/>
+ </tile>
+ <tile id="11">
+  <properties>
+   <property name="BlockType" value="Stone"/>
+  </properties>
+  <image width="34" height="34" source="../img/blocks/stoneBlocks.png"/>
+ </tile>
+ <tile id="12">
+  <properties>
+   <property name="BlockType" value="SemiDeath"/>
+   <property name="PlayerHP" type="int" value="1"/>
+  </properties>
+  <image width="34" height="34" source="../img/blocks/oneLifeBlock.png"/>
+ </tile>
+ <tile id="14">
+  <properties>
+   <property name="BlockType" value="Explosion"/>
+   <property name="NumOfAffectedBlocks" type="int" value="10"/>
+  </properties>
+  <image width="34" height="34" source="../img/blocks/randomBlock.png"/>
  </tile>
 </tileset>

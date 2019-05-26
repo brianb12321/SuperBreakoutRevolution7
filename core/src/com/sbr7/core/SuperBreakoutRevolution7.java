@@ -17,10 +17,24 @@ public class SuperBreakoutRevolution7 extends Game {
 	@Override
 	public void create () {
             manager = new ResourceManager();
+            manager.addTexture("paddle", "img/paddleNormal.png");
+            manager.addTexture("ball", "img/ballNormal.png");
+            manager.addTexture("powerUp_speed", "img/powerUps/speedPowerup.png");
+            manager.addLevelFile("raw/level1.tmx");
+            manager.addLevelFile("raw/level2.tmx");
+            manager.addLevelFile("raw/level3.tmx");
+            manager.addLevelFile("raw/level4.tmx");
+            manager.addLevelFile("raw/level5.tmx");
+            manager.addSfx("hit", "sfx/hit.mp3");
+            manager.addSfx("explosion", "sfx/explosion.mp3");
+            manager.addMusic("bg1", "music/Kevin_MacLeod___Presenterator-56pTKTfo3Rs.mp3");
+            manager.addMusic("bgDangerous", "music/Evening of Chaos.mp3");
             batch = new SpriteBatch();
             camera = new OrthographicCamera();
             camera.setToOrtho(false, GameDetails.WIDTH, GameDetails.HEIGHT);
-            super.setScreen(new LevelScreen(batch, "raw/level1.tmx", manager));
+            manager.getMusic("bg1").setLooping(true);
+            manager.getMusic("bg1").play();
+            super.setScreen(new LevelScreen(batch, manager, camera, 1));
 	}
 
 	@Override

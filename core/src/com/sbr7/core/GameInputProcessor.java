@@ -19,8 +19,10 @@ public class GameInputProcessor implements InputProcessor {
     private final Player player;
     private final float speed = GameDetails.scaleDown(700);
     private final float turboSpeed = GameDetails.scaleDown(12000);
-    public GameInputProcessor(Player p) {
+    private final ResourceManager manager;
+    public GameInputProcessor(Player p, ResourceManager m) {
         player = p;
+        manager = m;
     }
     @Override
     public boolean keyDown(int i) {
@@ -40,6 +42,10 @@ public class GameInputProcessor implements InputProcessor {
         }
         if(i == Keys.ESCAPE) {
             Gdx.app.exit();
+        }
+        if(i == Keys.M) {
+            manager.getPlayingMusic().stop();
+            manager.getPlayingMusic().play();
         }
         return true;
     }
