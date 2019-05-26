@@ -28,6 +28,7 @@ public class SuperBreakoutRevolution7 extends Game {
                 public void run(LevelState previousStates) {
                     manager.getPlayingMusic().stop();
                     Music m = manager.getMusic("time");
+                    m.setVolume(GameDetails.VOLUME);
                     m.setOnCompletionListener(new OnCompletionListener() {
                         @Override
                         public void onCompletion(Music music) {
@@ -46,6 +47,7 @@ public class SuperBreakoutRevolution7 extends Game {
                 public void run(LevelState previousStates) {
                     manager.getPlayingMusic().stop();
                     Music m = manager.getMusic("timeAlmostGoine");
+                    m.setVolume(GameDetails.VOLUME);
                     m.setOnCompletionListener(new OnCompletionListener() {
                         @Override
                         public void onCompletion(Music music) {
@@ -69,6 +71,8 @@ public class SuperBreakoutRevolution7 extends Game {
             manager.addLevelFile("raw/level3.tmx");
             manager.addLevelFile("raw/level4.tmx");
             manager.addLevelFile("raw/level5.tmx");
+            manager.addLevelFile("raw/level6.tmx");
+            manager.addLevelFile("raw/level7.tmx");
             manager.addSfx("hit", "sfx/hit.mp3");
             manager.addSfx("explosion", "sfx/explosion.mp3");
             manager.addMusic("bg1", "music/Kevin_MacLeod___Presenterator-56pTKTfo3Rs.mp3");
@@ -79,13 +83,15 @@ public class SuperBreakoutRevolution7 extends Game {
             batch = new SpriteBatch();
             camera = new OrthographicCamera();
             camera.setToOrtho(false, GameDetails.WIDTH, GameDetails.HEIGHT);
-            manager.getMusic("bg1").setLooping(true);
-            manager.getMusic("bg1").play();
-            super.setScreen(new LevelScreen(batch, manager, camera, 1, stateManager));
+            Music m = manager.getMusic("bg1");
+            m.setLooping(true);
+            m.setVolume(GameDetails.VOLUME);
+            m.play();
+            super.setScreen(new LevelScreen(batch, manager, camera, 7, stateManager));
 	}
 
 	@Override
-	public void render () {
+	public void render () { 
             super.render();
 	}
 	

@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.sbr7.core;
 
 import com.badlogic.gdx.Gdx;
@@ -45,8 +41,25 @@ public class ResourceManager implements Disposable {
     public Music getPlayingMusic() {
         return _playingMusic;
     }
+    public void switchMusic(String name) {
+        getPlayingMusic().stop();
+        Music m = getMusic(name);
+        m.setVolume(GameDetails.VOLUME);
+        m.setLooping(true);
+        m.play();
+    }
+    public void switchMusicMoLoop(String name) {
+        getPlayingMusic().stop();
+        Music m = getMusic(name);
+        m.setVolume(GameDetails.VOLUME);
+        m.setLooping(false);
+        m.play();
+    }
     public Sound getSfx(String name) {
         return _sfx.get(name);
+    }
+    public void playSfx(String name) {
+        getSfx(name).play(GameDetails.VOLUME);
     }
     public String getLevelFile(int number) {
         return levels.get(number - 1);

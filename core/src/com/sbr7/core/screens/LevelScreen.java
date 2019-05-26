@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.sbr7.core.screens;
 
 import com.badlogic.gdx.Game;
@@ -42,10 +38,6 @@ import com.sbr7.core.ResourceManager;
 import com.sbr7.core.StateRunnable;
 import com.sbr7.core.objects.Player;
 
-/**
- *
- * @author gamec
- */
 public class LevelScreen implements Screen {
 
     private final SpriteBatch batch;
@@ -130,6 +122,7 @@ public class LevelScreen implements Screen {
         manager.getPlayingMusic().stop();
         Music m = manager.getMusic(musicName);
         m.setLooping(true);
+        m.setVolume(GameDetails.VOLUME);
         m.play();
     }
     
@@ -272,6 +265,7 @@ public class LevelScreen implements Screen {
                 Cell cell = layer.getCell(c, r);
                 if(cell == null) continue;
                 if(cell.getTile() == null) continue;
+                
                 //Can't use helper method to convert pixels to meters.
                 def.position.set((c + 0.5f) * tileSize / GameDetails.PPM, (r + 0.5f) * tileSize / GameDetails.PPM);
                 ChainShape polygon = new ChainShape();

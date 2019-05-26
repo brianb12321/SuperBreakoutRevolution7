@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.2" tiledversion="1.2.4" name="blockTileSet" tilewidth="34" tileheight="34" tilecount="10" columns="0">
+<tileset version="1.2" tiledversion="1.2.4" name="blockTileSet" tilewidth="34" tileheight="34" tilecount="12" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <image width="34" height="34" source="../img/blocks/redBlock.png"/>
@@ -37,7 +37,7 @@
  <tile id="12">
   <properties>
    <property name="BlockType" value="SemiDeath"/>
-   <property name="PlayerHP" type="int" value="1"/>
+   <property name="PlayerHP" type="int" value="2"/>
   </properties>
   <image width="34" height="34" source="../img/blocks/oneLifeBlock.png"/>
  </tile>
@@ -47,5 +47,11 @@
    <property name="NumOfAffectedBlocks" type="int" value="10"/>
   </properties>
   <image width="34" height="34" source="../img/blocks/randomBlock.png"/>
+ </tile>
+ <tile id="16">
+  <image width="34" height="34" source="../img/blocks/orangeBlock.png"/>
+ </tile>
+ <tile id="18">
+  <image width="34" height="34" source="../img/blocks/whiteBlock.png"/>
  </tile>
 </tileset>

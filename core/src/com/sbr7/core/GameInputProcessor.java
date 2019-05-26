@@ -52,9 +52,6 @@ public class GameInputProcessor implements InputProcessor {
                 
             }
         }
-        if(i == Keys.H) {
-            player.setHealth(900);
-        }
         return true;
     }
 
