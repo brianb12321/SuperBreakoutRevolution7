@@ -87,7 +87,7 @@ public class SuperBreakoutRevolution7 extends Game {
             m.setLooping(true);
             m.setVolume(GameDetails.VOLUME);
             m.play();
-            super.setScreen(new LevelScreen(batch, manager, camera, 7, stateManager));
+            super.setScreen(new LevelScreen(batch, manager, camera, 1, stateManager));
 	}
 
 	@Override

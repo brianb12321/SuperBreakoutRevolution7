@@ -9,8 +9,8 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
                 config.title = GameDetails.TITLE;
-                config.width = GameDetails.WIDTH;
-                config.height = GameDetails.HEIGHT;
+                config.width = GameDetails.WIDTH / 2;
+                config.height = GameDetails.HEIGHT / 2;
 		new LwjglApplication(new SuperBreakoutRevolution7(), config);
 	}
 }

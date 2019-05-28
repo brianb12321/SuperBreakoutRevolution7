@@ -65,7 +65,7 @@ public class Player extends Box2dSprite {
         if(isAttached == true) {
             isAttached = false;
             ballBody.setType(BodyType.DynamicBody);
-            getBallBody().applyForceToCenter(new Vector2(0, 1000), true);
+            getBallBody().applyForceToCenter(new Vector2(0, 600), true);
         }
     }
     public int getNumOfLives() {
