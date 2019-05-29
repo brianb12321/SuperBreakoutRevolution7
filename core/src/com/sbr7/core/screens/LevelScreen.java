@@ -50,6 +50,7 @@ public class LevelScreen implements Screen {
     private OrthographicCamera debugCamera;
     private OrthographicCamera hudCam;
     private final LevelStateManager stateManager;
+    private int maxSpeed = 63;
     private Hud hud;
     private Player player;
     private ResourceManager manager;
@@ -66,7 +67,7 @@ public class LevelScreen implements Screen {
         manager = m;
         levelNumber = ln;
         //Set gravity to earth.
-        Vector2 gravity = new Vector2(0, -5.8f);
+        Vector2 gravity = new Vector2(0, -9.8f);
         batch = sb;
         mapToLoad = manager.getLevelFile(levelNumber);
         debugRend = new Box2DDebugRenderer();
@@ -132,37 +133,39 @@ public class LevelScreen implements Screen {
         Vector2 bodyVec = new Vector2(GameDetails.scaleDown(GameDetails.WIDTH / 2), GameDetails.scaleDown(1));
         def.position.set(bodyVec);
         PolygonShape shape1 = new PolygonShape();
-        PolygonShape shape2 = new PolygonShape();
-        PolygonShape shape3 = new PolygonShape();
+//        PolygonShape shape2 = new PolygonShape();
+//        PolygonShape shape3 = new PolygonShape();
         FixtureDef fixDef1 = new FixtureDef();
-        FixtureDef fixDef2 = new FixtureDef();
-        FixtureDef fixDef3 = new FixtureDef();
+//        FixtureDef fixDef2 = new FixtureDef();
+//        FixtureDef fixDef3 = new FixtureDef();
         //=============
         //First fixture
         
         fixDef1.filter.categoryBits = CollisionBits.PADDLE;
         fixDef1.friction = 0;
-        shape1.setAsBox(GameDetails.scaleDown(16), GameDetails.scaleDown(16), new Vector2(0, 0), 0);
+        fixDef1.density = 10.0f;
+        fixDef1.restitution = 0.1f;
+        shape1.setAsBox(GameDetails.scaleDown(64), GameDetails.scaleDown(16));
         fixDef1.shape = shape1;
         //================
         //Second Fixture
         
-        fixDef2.filter.categoryBits = CollisionBits.PADDLE;
-        fixDef2.friction = 0;
-        shape2.setAsBox(GameDetails.scaleDown(16), GameDetails.scaleDown(16), new Vector2(16, 0), 0);
-        fixDef2.shape = shape1;
+//        fixDef2.filter.categoryBits = CollisionBits.PADDLE;
+//        fixDef2.friction = 0;
+//        shape2.setAsBox(GameDetails.scaleDown(16), GameDetails.scaleDown(16), new Vector2(16, 0), 0);
+//        fixDef2.shape = shape1;
         //===================
         //Thrid Fixture
         
-        fixDef3.filter.categoryBits = CollisionBits.PADDLE;
-        fixDef3.friction = 0;
-        shape3.setAsBox(GameDetails.scaleDown(32), GameDetails.scaleDown(16), new Vector2(32, 0), 0);
-        fixDef3.shape = shape1;
+//        fixDef3.filter.categoryBits = CollisionBits.PADDLE;
+//        fixDef3.friction = 0;
+//        shape3.setAsBox(GameDetails.scaleDown(32), GameDetails.scaleDown(16), new Vector2(32, 0), 0);
+//        fixDef3.shape = shape1;
         Body b = world.createBody(def);
-        b.getMassData().mass = 10000;
+        b.getMassData().mass = 1000f;
         b.createFixture(fixDef1);
-        b.createFixture(fixDef2);
-        b.createFixture(fixDef3);
+//        b.createFixture(fixDef2);
+//        b.createFixture(fixDef3);
         player = new Player(b, manager);
     }
     private void createFloor() {
@@ -194,6 +197,7 @@ public class LevelScreen implements Screen {
         batch.setProjectionMatrix(gameCamera.combined);
         //Some arbitrary values. Doesn't really matter right now.
         world.step(f, 6, 2);
+        limitSpeed();
         removeBlocks();
         checkWinCondition();
         player.update(f);
@@ -202,10 +206,22 @@ public class LevelScreen implements Screen {
         //Begin rendering
 
         gameCamera.update();
-        //renderer.render();
+        renderer.render();
         player.render(batch);
         hud.render(batch);
-        debugRend.render(world, debugCamera.combined);
+        //debugRend.render(world, debugCamera.combined);
+    }
+    private void limitSpeed() {
+        Body ball = player.getBallBody();
+        Vector2 velocity = ball.getLinearVelocity();
+        float speed = velocity.len();
+        //Reduce speed
+        if(speed < maxSpeed) {
+           ball.setLinearDamping(0.0f);
+        }
+        else if(speed > maxSpeed) {
+            ball.setLinearDamping(0.5f);
+        }
     }
     private void checkWinCondition() {
         //If true, we won!!!
@@ -266,6 +282,7 @@ public class LevelScreen implements Screen {
         FixtureDef fixDef = new FixtureDef();
         fixDef.friction = 0;
         fixDef.restitution = 1f;
+        fixDef.density = 1.0f;
         CircleShape circle = new CircleShape();
         circle.setRadius(GameDetails.scaleDown(16));
         def.position.set(player.getX(), player.getY() + GameDetails.scaleDown(32));
@@ -283,6 +300,9 @@ public class LevelScreen implements Screen {
         def.type = BodyType.StaticBody;
         FixtureDef fixDef = new FixtureDef();
         fixDef.filter.categoryBits = bits;
+        fixDef.friction = 0.0f;
+        fixDef.density = 10.0f;
+        fixDef.restitution = 0.1f;
         //r = y
         for(int r = 0; r < layer.getHeight(); r++) {
             //c = x

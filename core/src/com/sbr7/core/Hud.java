@@ -33,7 +33,7 @@ public class Hud implements Disposable {
         healthLabel = new Label("", healthLabelStyle);
         timeLabel = new Label("", timerLabelStyle);
         healthLabel.setPosition(8, 8);
-        timeLabel.setPosition(GameDetails.WIDTH - 32, 8);
+        timeLabel.setPosition((GameDetails.WIDTH / 2) - 32, 8);
         stage = new Stage();
         stage.addActor(healthLabel);
         stage.addActor(timeLabel);

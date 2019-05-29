@@ -1,6 +1,8 @@
 
 package com.sbr7.core;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
@@ -38,6 +40,7 @@ public class BlockCollisionDetector implements ContactListener {
             b = (Block)fb.getUserData();
         }
         if(b != null) {
+            Body ball = player.getBallBody();
             boolean remove = true;
             if(b.getMask() == CollisionBits.BLOCK) {
                 //Do special stuff for special blocks.
@@ -73,7 +76,6 @@ public class BlockCollisionDetector implements ContactListener {
     }
     @Override
     public void preSolve(Contact cntct, Manifold mnfld) {
-        
     }
 
     @Override
