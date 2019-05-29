@@ -1,6 +1,7 @@
 
 package com.sbr7.core;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -21,19 +22,31 @@ public class Hud implements Disposable {
     private final LabelStyle timerLabelStyle;
     private final Player player;
     private float totalTime;
+    private boolean timeDown;
+    private int timeDownCount;
     private LevelStateManager stateManager;
-    public Hud(OrthographicCamera c, Player p, LevelStateManager sm) {
+    public Hud(OrthographicCamera c, Player p, LevelStateManager sm, boolean td, int tdc) {
         hudCam = c;
         stateManager = sm;
         player = p;
+        timeDown = td;
+        timeDownCount = tdc;
         healthLabelStyle = new LabelStyle();
         healthLabelStyle.font = new BitmapFont();
         timerLabelStyle = new LabelStyle();
         timerLabelStyle.font = new BitmapFont();
+        if(timeDown) {
+            totalTime = tdc;
+        }
         healthLabel = new Label("", healthLabelStyle);
         timeLabel = new Label("", timerLabelStyle);
         healthLabel.setPosition(8, 8);
-        timeLabel.setPosition((GameDetails.WIDTH / 2) - 32, 8);
+        if(timeDown) {
+            timeLabel.setPosition((GameDetails.WIDTH / 2) - 64, (GameDetails.HEIGHT / 2) - 16);
+        }
+        else {
+            timeLabel.setPosition((GameDetails.WIDTH / 2) - 32, 8);
+        }
         stage = new Stage();
         stage.addActor(healthLabel);
         stage.addActor(timeLabel);
@@ -52,14 +65,26 @@ public class Hud implements Disposable {
         sb.setProjectionMatrix(hudCam.combined);
         healthLabel.setText("Lives: " + player.getNumOfLives());
         //Ten minutes has elapsed.
-        if((int)totalTime / 60 == 5 && (int)totalTime % 60 == 0) {
-            stateManager.transitionState(LevelState.TIME);
+        if(!timeDown) {
+            if((int)totalTime / 60 == 5 && (int)totalTime % 60 == 0) {
+                stateManager.transitionState(LevelState.TIME);
+            }
+        }
+        else {
+            if((int)totalTime / 60 == 0 && (int)totalTime % 60 == 0) {
+                Gdx.app.exit();
+            }
         }
         timeLabel.setText("" + (int)(totalTime) / 60 + ":" + (int)(totalTime) % 60);
         stage.draw();
     }
     public void update(float delta) {
-        totalTime += delta;
+        if(!timeDown) {
+            totalTime += delta;
+        }
+        else {
+            totalTime -= delta;
+        }
     }
 
     @Override

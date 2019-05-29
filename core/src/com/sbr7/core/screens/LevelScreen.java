@@ -45,6 +45,8 @@ public class LevelScreen implements Screen {
     private TiledMap map;
     private final String mapToLoad;
     private final World world;
+    private boolean timeDown = false;
+    private int timeDownCount = 30;
     private Box2DDebugRenderer debugRend;
     private OrthographicCamera gameCamera;
     private OrthographicCamera debugCamera;
@@ -93,25 +95,39 @@ public class LevelScreen implements Screen {
         hudCam.setToOrtho(false, GameDetails.WIDTH, GameDetails.HEIGHT);
         map = new TmxMapLoader().load(mapToLoad);
         configureMusic();
+        configureSettings();
         renderer = new OrthogonalTiledMapRenderer(map);
         //===============================
         //Configure physics
         
-        createBlock((TiledMapTileLayer)map.getLayers().get("blocks"), CollisionBits.BLOCK);
-        createBlock((TiledMapTileLayer)map.getLayers().get("walls"), CollisionBits.WALL);
+        createBlock((TiledMapTileLayer)map.getLayers().get("blocks"), CollisionBits.BLOCK, false);
+        createBlock((TiledMapTileLayer)map.getLayers().get("walls"), CollisionBits.WALL, false);
         createFloor();
         createPaddle();
         cd = new BlockCollisionDetector(manager, player, blocks);
-        hud = new Hud(hudCam, player, stateManager);
+        hud = new Hud(hudCam, player, stateManager, timeDown, timeDownCount);
         world.setContactListener(cd);
         createBall();
         Gdx.input.setInputProcessor(new GameInputProcessor(player, manager, stateManager));
+    }
+    private void configureSettings() {
+        if(map.getProperties().containsKey("LevelType")) {
+            if(map.getProperties().get("LevelType").toString().equals("CountDown")) {
+                timeDown = true;
+                if(map.getProperties().containsKey("CountDownTime")) {
+                    timeDownCount = (Integer)map.getProperties().get("CountDownTime");
+                }
+            }
+        }
     }
     private void configureMusic() {
         if(map.getProperties().containsKey("LevelType")) {
             String type = map.getProperties().get("LevelType").toString();
             if(type.equals("Dangerous")) {
                 musicName = "bgDangerous";
+            }
+            else if(type.equals("CountDown")) {
+                musicName = "CountDown";
             }
             else {
                 musicName = "bg1";
@@ -143,8 +159,8 @@ public class LevelScreen implements Screen {
         
         fixDef1.filter.categoryBits = CollisionBits.PADDLE;
         fixDef1.friction = 0;
-        fixDef1.density = 10.0f;
-        fixDef1.restitution = 0.1f;
+        //fixDef1.density = 10.0f;
+        //fixDef1.restitution = 0.1f;
         shape1.setAsBox(GameDetails.scaleDown(64), GameDetails.scaleDown(16));
         fixDef1.shape = shape1;
         //================
@@ -294,15 +310,17 @@ public class LevelScreen implements Screen {
         b.getMassData().mass = 5000;
         player.setBallBody(b);
     }
-    public void createBlock(TiledMapTileLayer layer, byte bits) {
+    public void createBlock(TiledMapTileLayer layer, byte bits, boolean isDense) {
         float tileSize = layer.getTileWidth();
         BodyDef def = new BodyDef();
         def.type = BodyType.StaticBody;
         FixtureDef fixDef = new FixtureDef();
         fixDef.filter.categoryBits = bits;
         fixDef.friction = 0.0f;
-        fixDef.density = 10.0f;
-        fixDef.restitution = 0.1f;
+        if(isDense) {
+            fixDef.density = 10.0f;
+            fixDef.restitution = 0.1f;
+        }
         //r = y
         for(int r = 0; r < layer.getHeight(); r++) {
             //c = x

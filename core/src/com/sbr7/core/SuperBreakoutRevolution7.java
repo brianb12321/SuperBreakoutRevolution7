@@ -80,6 +80,7 @@ public class SuperBreakoutRevolution7 extends Game {
             manager.addMusic("time", "music/Movement Proposition.mp3");
             manager.addMusic("timeAlmostGoine", "music/There It Is.mp3");
             manager.addMusic("lives", "music/Final Count.mp3");
+            manager.addMusic("CountDown", "music/Exit the Premises.mp3");
             batch = new SpriteBatch();
             camera = new OrthographicCamera();
             camera.setToOrtho(false, GameDetails.WIDTH, GameDetails.HEIGHT);
