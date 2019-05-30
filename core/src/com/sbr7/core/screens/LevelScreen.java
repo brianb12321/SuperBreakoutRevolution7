@@ -105,7 +105,7 @@ public class LevelScreen implements Screen {
         createFloor();
         createPaddle();
         cd = new BlockCollisionDetector(manager, player, blocks);
-        hud = new Hud(hudCam, player, stateManager, timeDown, timeDownCount);
+        hud = new Hud(hudCam, player, stateManager, timeDown, timeDownCount, levelNumber);
         world.setContactListener(cd);
         createBall();
         Gdx.input.setInputProcessor(new GameInputProcessor(player, manager, stateManager));

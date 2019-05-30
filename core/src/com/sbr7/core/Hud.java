@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sbr7.core.objects.Player;
 import javafx.scene.Scene;
 
@@ -24,9 +25,11 @@ public class Hud implements Disposable {
     private float totalTime;
     private boolean timeDown;
     private int timeDownCount;
+    private int level;
     private LevelStateManager stateManager;
-    public Hud(OrthographicCamera c, Player p, LevelStateManager sm, boolean td, int tdc) {
+    public Hud(OrthographicCamera c, Player p, LevelStateManager sm, boolean td, int tdc, int l) {
         hudCam = c;
+        level = l;
         stateManager = sm;
         player = p;
         timeDown = td;
@@ -63,7 +66,7 @@ public class Hud implements Disposable {
             }
         });
         sb.setProjectionMatrix(hudCam.combined);
-        healthLabel.setText("Lives: " + player.getNumOfLives());
+        healthLabel.setText("Lives: " + player.getNumOfLives() + ", level: " + level);
         //Ten minutes has elapsed.
         if(!timeDown) {
             if((int)totalTime / 60 == 5 && (int)totalTime % 60 == 0) {

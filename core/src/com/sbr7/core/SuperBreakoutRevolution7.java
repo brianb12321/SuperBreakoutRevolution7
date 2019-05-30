@@ -73,6 +73,7 @@ public class SuperBreakoutRevolution7 extends Game {
             manager.addLevelFile("raw/level5.tmx");
             manager.addLevelFile("raw/level6.tmx");
             manager.addLevelFile("raw/level7.tmx");
+            manager.addLevelFile("raw/level9.tmx");
             manager.addSfx("hit", "sfx/hit.mp3");
             manager.addSfx("explosion", "sfx/explosion.mp3");
             manager.addMusic("bg1", "music/Kevin_MacLeod___Presenterator-56pTKTfo3Rs.mp3");

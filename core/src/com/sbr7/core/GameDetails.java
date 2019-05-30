@@ -16,7 +16,7 @@ public class GameDetails {
     public static final float PPM = 100f;
     public static final int STARTING_LIVES = 50;
     public static final int MIN_LIVES_TIL_WARNING = 5;
-    public static final float VOLUME = 1f;
+    public static final float VOLUME = 0f;
     public static float scaleDown(float value) {
         return value / PPM;
     }
