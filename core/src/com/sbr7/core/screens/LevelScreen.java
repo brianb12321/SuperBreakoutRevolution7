@@ -245,7 +245,7 @@ public class LevelScreen implements Screen {
             ((Game)Gdx.app.getApplicationListener()).setScreen(new ResultScreen(levelNumber, manager, gameCamera, batch, stateManager));
         }
         else if(player.getNumOfLives() <= 0) {
-            ((Game)Gdx.app.getApplicationListener()).setScreen(new GameOverScreen());
+            ((Game)Gdx.app.getApplicationListener()).setScreen(new GameOverScreen(batch, gameCamera, manager, stateManager));
         }
     }
     private void removeBlocks() {

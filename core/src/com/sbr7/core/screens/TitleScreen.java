@@ -1,7 +1,10 @@
 
 package com.sbr7.core.screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -9,6 +12,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.sbr7.core.GameDetails;
+import com.sbr7.core.LevelStateManager;
+import com.sbr7.core.ResourceManager;
 
 /**
  *
@@ -19,11 +24,15 @@ public class TitleScreen implements Screen {
     private Sprite _backgroundSprite;
     private Texture _titleTexture;
     private Texture _background;
+    private ResourceManager manager;
+    private LevelStateManager stateManager;
     private final SpriteBatch batch;
     private final OrthographicCamera camera;
-    public TitleScreen(SpriteBatch sb, OrthographicCamera c) {
+    public TitleScreen(SpriteBatch sb, OrthographicCamera c, ResourceManager m, LevelStateManager lm) {
         batch = sb;
         camera = c;
+        manager = m;
+        stateManager = lm;
     }
     @Override
     public void show() {
@@ -45,6 +54,9 @@ public class TitleScreen implements Screen {
         _backgroundSprite.draw(batch);
         _title.draw(batch);
         batch.end();
+        if(Gdx.input.isKeyPressed(Keys.B)) {
+            ((Game)Gdx.app.getApplicationListener()).setScreen(new LevelScreen(batch, manager, camera, 1, stateManager));
+        }
     }
 
     @Override

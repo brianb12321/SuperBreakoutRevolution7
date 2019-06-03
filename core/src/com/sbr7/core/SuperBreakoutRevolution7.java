@@ -52,7 +52,7 @@ public class SuperBreakoutRevolution7 extends Game {
                         @Override
                         public void onCompletion(Music music) {
                             Gdx.app.log("Game", "Time ran out!!");
-                            ((Game)Gdx.app.getApplicationListener()).setScreen(new GameOverScreen());
+                            ((Game)Gdx.app.getApplicationListener()).setScreen(new GameOverScreen(batch, camera, manager, stateManager));
                         }
                     });
                     m.play();
@@ -89,7 +89,7 @@ public class SuperBreakoutRevolution7 extends Game {
             m.setLooping(true);
             m.setVolume(GameDetails.VOLUME);
             m.play();
-            super.setScreen(new LevelScreen(batch, manager, camera, 1, stateManager));
+            super.setScreen(new TitleScreen(batch, camera, manager, stateManager));
 	}
 
 	@Override
