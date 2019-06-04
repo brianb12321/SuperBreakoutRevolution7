@@ -36,6 +36,7 @@ public class TitleScreen implements Screen {
     }
     @Override
     public void show() {
+        manager.switchMusic("titleScreen");
         _titleTexture = new Texture("img/sbr7Title.png");
         _title = new Sprite(_titleTexture);
         _background = new Texture("img/background.jpg");

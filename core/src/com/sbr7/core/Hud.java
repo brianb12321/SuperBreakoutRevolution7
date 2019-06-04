@@ -69,7 +69,7 @@ public class Hud implements Disposable {
         healthLabel.setText("Lives: " + player.getNumOfLives() + ", level: " + level);
         //Ten minutes has elapsed.
         if(!timeDown) {
-            if((int)totalTime / 60 == 5 && (int)totalTime % 60 == 0) {
+            if((int)totalTime / 60 == 4 && (int)totalTime % 60 == 0) {
                 stateManager.transitionState(LevelState.TIME);
             }
         }
