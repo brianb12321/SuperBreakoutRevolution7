@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sbr7.core.objects.Player;
-import javafx.scene.Scene;
 
 public class Hud implements Disposable {
     private final Stage stage;

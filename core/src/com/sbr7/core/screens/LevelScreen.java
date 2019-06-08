@@ -14,6 +14,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -332,14 +333,17 @@ public class LevelScreen implements Screen {
                 //Can't use helper method to convert pixels to meters.
                 def.position.set((c + 0.5f) * tileSize / GameDetails.PPM, (r + 0.5f) * tileSize / GameDetails.PPM);
                 ChainShape polygon = new ChainShape();
+                PolygonShape box = new PolygonShape();
                 //Copied code. Binds three vertices to a tile.
                 Vector2[] verticies = {
                     new Vector2(GameDetails.scaleDown(-tileSize / 2), GameDetails.scaleDown(-tileSize / 2)),
                     new Vector2(GameDetails.scaleDown(-tileSize / 2), GameDetails.scaleDown(tileSize / 2)),
                     new Vector2(GameDetails.scaleDown(tileSize / 2), GameDetails.scaleDown(tileSize / 2)),
+                    new Vector2(GameDetails.scaleDown(tileSize / 2), GameDetails.scaleDown(-tileSize / 2))
                 };
                 polygon.createChain(verticies);
-                fixDef.shape = polygon;
+                box.setAsBox(GameDetails.scaleDown(tileSize / 2), GameDetails.scaleDown(tileSize / 2));
+                fixDef.shape = box;
                 Body b = world.createBody(def);
                 Fixture f = b.createFixture(fixDef);
                 Block block = new Block(cell, b, bits);
