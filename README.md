@@ -8,6 +8,11 @@
 Welcome to the official repo of SBR7.
 ## What is SBR7
 Have you played breakout on your phone, computer, Atari 2600, Switch, etc? SBR7 is a remake of the classic, beloved game.
+
+![Title Screen](https://github.com/brianb12321/SuperBreakoutRevolution7/raw/master/images/TitleScreen.PNG)
+![Level One](https://github.com/brianb12321/SuperBreakoutRevolution7/raw/master/images/Level1.PNG)
+![Hard Level](https://github.com/brianb12321/SuperBreakoutRevolution7/raw/master/images/HardLevel.PNG)
+![Game Over Screen](https://github.com/brianb12321/SuperBreakoutRevolution7/raw/master/images/GameOverScreen.PNG)
 ## Changes
 * Item dropouts
 * All different colors of blocks to break.
