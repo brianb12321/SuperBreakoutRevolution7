@@ -18,12 +18,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.brianb12321.sbr7.*;
 import com.brianb12321.sbr7.objects.Player;
 
-public class LevelScreen implements Screen {
+public class LevelScreen extends GameScreen {
 
-    private final SpriteBatch batch;
     private MapRenderer renderer;
     private TiledMap map;
     private final String mapToLoad;
@@ -31,41 +32,36 @@ public class LevelScreen implements Screen {
     private boolean timeDown = false;
     private int timeDownCount = 30;
     private Box2DDebugRenderer debugRend;
-    private OrthographicCamera gameCamera;
     private OrthographicCamera debugCamera;
-    private OrthographicCamera hudCam;
-    private final LevelStateManager stateManager;
     private int maxSpeed = 63;
+    private OrthographicCamera hudCamera;
     private Hud hud;
     private Player player;
-    private ResourceManager manager;
     private Array<Block> blocks;
     private BlockCollisionDetector cd;
     private String musicName;
     private int levelNumber;
-    public LevelScreen(SpriteBatch sb, ResourceManager m, OrthographicCamera cam, int ln, LevelStateManager lm) {
-        gameCamera = cam;
-        stateManager = lm;
+    public LevelScreen(GameScreen parent, int ln) {
+        super(parent);
         debugCamera = new OrthographicCamera();
-        hudCam = new OrthographicCamera();
+        hudCamera = new OrthographicCamera();
         blocks = new Array<Block>();
-        manager = m;
         levelNumber = ln;
         //Set gravity to earth.
         Vector2 gravity = new Vector2(0, -9.8f);
-        batch = sb;
-        mapToLoad = manager.getLevelFile(levelNumber);
+        mapToLoad = resourceManager.getLevelFile(levelNumber);
         debugRend = new Box2DDebugRenderer();
         world = new World(gravity, true);
     }
+
     @Override
     public void show() {
         stateManager.addHandler(LevelState.NORMAL, new StateRunnable() {
             @Override
             public void run(LevelState previousStates) {
-                manager.getPlayingMusic().stop();
+                resourceManager.getPlayingMusic().stop();
                 if(musicName != null && !musicName.equals("")) {
-                    manager.getMusic(musicName).play();
+                    resourceManager.getMusic(musicName).play();
                 }
             }
             @Override
@@ -74,12 +70,14 @@ public class LevelScreen implements Screen {
             }
         });
         stateManager.transitionState(LevelState.NORMAL);
+        hudCamera.setToOrtho(false, GameDetails.WIDTH, GameDetails.HEIGHT);
         debugCamera.setToOrtho(false, GameDetails.scaleDown(GameDetails.WIDTH), GameDetails.scaleDown(GameDetails.HEIGHT));
-        hudCam.setToOrtho(false, GameDetails.WIDTH, GameDetails.HEIGHT);
-        map = new TmxMapLoader().load(mapToLoad);
+        map = new TmxMapLoader().load(Gdx.files.internal(mapToLoad).path());
         configureMusic();
         configureSettings();
         renderer = new OrthogonalTiledMapRenderer(map);
+        renderer.setView(camera);
+        spriteBatch.setProjectionMatrix(camera.combined);
         //===============================
         //Configure physics
         
@@ -87,11 +85,11 @@ public class LevelScreen implements Screen {
         createBlock((TiledMapTileLayer)map.getLayers().get("walls"), CollisionBits.WALL, false);
         createFloor();
         createPaddle();
-        cd = new BlockCollisionDetector(manager, player, blocks);
-        hud = new Hud(hudCam, player, stateManager, timeDown, timeDownCount, levelNumber);
+        cd = new BlockCollisionDetector(resourceManager, player, blocks);
+        hud = new Hud(hudCamera, player, stateManager, timeDown, timeDownCount, levelNumber);
         world.setContactListener(cd);
         createBall();
-        Gdx.input.setInputProcessor(new GameInputProcessor(player, manager, stateManager));
+        Gdx.input.setInputProcessor(new GameInputProcessor(player, resourceManager, stateManager));
     }
     private void configureSettings() {
         if(map.getProperties().containsKey("LevelType")) {
@@ -119,8 +117,8 @@ public class LevelScreen implements Screen {
         else {
             musicName = "bg1";
         }
-        manager.getPlayingMusic().stop();
-        Music m = manager.getMusic(musicName);
+        resourceManager.getPlayingMusic().stop();
+        Music m = resourceManager.getMusic(musicName);
         m.setLooping(true);
         m.setVolume(GameDetails.VOLUME);
         m.play();
@@ -165,7 +163,7 @@ public class LevelScreen implements Screen {
         b.createFixture(fixDef1);
 //        b.createFixture(fixDef2);
 //        b.createFixture(fixDef3);
-        player = new Player(b, manager);
+        player = new Player(b, resourceManager);
     }
     private void createFloor() {
         BodyDef def = new BodyDef();
@@ -191,11 +189,9 @@ public class LevelScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         //==================
         //Configure cameras
-        
-        renderer.setView(gameCamera);
-        batch.setProjectionMatrix(gameCamera.combined);
+
         //Some arbitrary values. Doesn't really matter right now.
-        world.step(f, 6, 2);
+        world.step(f, 6, 3);
         limitSpeed();
         removeBlocks();
         checkWinCondition();
@@ -204,12 +200,18 @@ public class LevelScreen implements Screen {
         //=================
         //Begin rendering
 
-        gameCamera.update();
+        camera.update();
         renderer.render();
-        player.render(batch);
-        hud.render(batch);
+        player.render(spriteBatch);
+        hud.render(spriteBatch);
         //debugRend.render(world, debugCamera.combined);
     }
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
     private void limitSpeed() {
         Body ball = player.getBallBody();
         Vector2 velocity = ball.getLinearVelocity();
@@ -225,10 +227,10 @@ public class LevelScreen implements Screen {
     private void checkWinCondition() {
         //If true, we won!!!
         if(blocks.size == 0) {
-            ((Game)Gdx.app.getApplicationListener()).setScreen(new ResultScreen(levelNumber, manager, gameCamera, batch, stateManager));
+            ((Game)Gdx.app.getApplicationListener()).setScreen(new ResultScreen(this, levelNumber));
         }
         else if(player.getNumOfLives() <= 0) {
-            ((Game)Gdx.app.getApplicationListener()).setScreen(new GameOverScreen(batch, gameCamera, manager, stateManager));
+            ((Game)Gdx.app.getApplicationListener()).setScreen(new GameOverScreen(this));
         }
     }
     private void removeBlocks() {
@@ -244,11 +246,6 @@ public class LevelScreen implements Screen {
             }
             buffer.clear();
         }
-    }
-
-    @Override
-    public void resize(int i, int i1) {
-        
     }
 
     @Override
@@ -269,11 +266,11 @@ public class LevelScreen implements Screen {
     @Override
     public void dispose() {
         map.dispose();
-        batch.dispose();
+        spriteBatch.dispose();
         player.dispose();
         hud.dispose();
         world.dispose();
-        manager.dispose();
+        resourceManager.dispose();
     }
     public void createBall() {
         BodyDef def = new BodyDef();

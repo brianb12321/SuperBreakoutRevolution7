@@ -16,36 +16,33 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.brianb12321.sbr7.GameDetails;
+import com.brianb12321.sbr7.GameScreen;
 import com.brianb12321.sbr7.LevelStateManager;
 import com.brianb12321.sbr7.ResourceManager;
 
-public class GameOverScreen implements Screen {
+public class GameOverScreen extends GameScreen {
 
     private Texture textTexture;
     private Sprite textSprite;
-    private final SpriteBatch batch;
-    private final OrthographicCamera camera;
-    private final Stage scene;
-    private final Label label;
-    private final ResourceManager manager;
-    private final LevelStateManager stateManager;
+    private Stage scene;
+    private Label label;
     
-    public GameOverScreen(SpriteBatch b, OrthographicCamera cam, ResourceManager m, LevelStateManager lm) {
-        batch = b;
-        manager = m;
-        stateManager = lm;
-        camera = cam;
+    public GameOverScreen(GameScreen parent) {
+        super(parent);
         scene = new Stage();
         LabelStyle ls = new LabelStyle();
         ls.font = new BitmapFont();
         label = new Label("Press B to play again.\nPress ESC to quit.", ls);
         scene.addActor(label);
     }
+    public GameOverScreen() {
+        super();
+    }
     
     @Override
     public void show() {
         Gdx.input.setInputProcessor(null);
-        manager.getPlayingMusic().stop();
+        resourceManager.getPlayingMusic().stop();
         textTexture = new Texture("img/gameOver.png");
         textSprite = new Sprite(textTexture);
         textSprite.setPosition((GameDetails.WIDTH / 2) / 2, (GameDetails.HEIGHT / 2) / 2);
@@ -58,12 +55,12 @@ public class GameOverScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
-        batch.begin();
-        textSprite.draw(batch);
-        batch.end();
+        spriteBatch.begin();
+        textSprite.draw(spriteBatch);
+        spriteBatch.end();
         scene.draw();
         if(Gdx.input.isKeyPressed(Keys.B)) {
-            ((Game)Gdx.app.getApplicationListener()).setScreen(new TitleScreen(batch, camera, manager, stateManager));
+            ((Game)Gdx.app.getApplicationListener()).setScreen(new TitleScreen(this));
         }
         else if(Gdx.input.isKeyPressed(Keys.ESCAPE)) {
             Gdx.app.exit();

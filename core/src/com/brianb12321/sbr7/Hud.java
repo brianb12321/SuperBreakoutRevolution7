@@ -17,7 +17,7 @@ public class Hud implements Disposable {
     private final Stage stage;
     private final Label healthLabel;
     private final Label timeLabel;
-    private final OrthographicCamera hudCam;
+    private final OrthographicCamera hudCamera;
     private final LabelStyle healthLabelStyle;
     private final LabelStyle timerLabelStyle;
     private final Player player;
@@ -26,8 +26,8 @@ public class Hud implements Disposable {
     private int timeDownCount;
     private int level;
     private LevelStateManager stateManager;
-    public Hud(OrthographicCamera c, Player p, LevelStateManager sm, boolean td, int tdc, int l) {
-        hudCam = c;
+    public Hud(OrthographicCamera camera, Player p, LevelStateManager sm, boolean td, int tdc, int l) {
+        hudCamera = camera;
         level = l;
         stateManager = sm;
         player = p;
@@ -42,12 +42,10 @@ public class Hud implements Disposable {
         }
         healthLabel = new Label("", healthLabelStyle);
         timeLabel = new Label("", timerLabelStyle);
-        healthLabel.setPosition(8, 8);
+        healthLabel.setPosition(8, 10);
+        timeLabel.setPosition(Gdx.graphics.getWidth() - 32, 10);
         if(timeDown) {
-            timeLabel.setPosition((GameDetails.WIDTH / 2) - 64, (GameDetails.HEIGHT / 2) - 16);
-        }
-        else {
-            timeLabel.setPosition((GameDetails.WIDTH / 2) - 32, 8);
+            timeLabel.setColor(Color.YELLOW);
         }
         stage = new Stage();
         stage.addActor(healthLabel);
@@ -64,7 +62,7 @@ public class Hud implements Disposable {
                 timeLabel.setColor(Color.WHITE);
             }
         });
-        sb.setProjectionMatrix(hudCam.combined);
+        sb.setProjectionMatrix(hudCamera.combined);
         healthLabel.setText("Lives: " + player.getNumOfLives() + ", level: " + level);
         //Ten minutes has elapsed.
         if(!timeDown) {
@@ -80,6 +78,7 @@ public class Hud implements Disposable {
         timeLabel.setText("" + (int)(totalTime) / 60 + ":" + (int)(totalTime) % 60);
         stage.draw();
     }
+
     public void update(float delta) {
         if(!timeDown) {
             totalTime += delta;

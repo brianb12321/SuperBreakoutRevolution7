@@ -68,7 +68,7 @@ public class ResourceManager implements Disposable {
         return levels.size >= number;
     }
     public void addTexture(String name, String internalName) {
-        _textures.put(name, new Texture(internalName));
+        _textures.put(name, new Texture(Gdx.files.internal(internalName)));
     }
     public Texture getTexture(String name) {
         return _textures.get(name);

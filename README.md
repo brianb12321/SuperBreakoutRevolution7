@@ -1,4 +1,10 @@
 # Super Breakout Revolution 7
+
+[![Available on itch.io](http://jessemillar.github.io/available-on-itchio-badge/badge-bw.png)](https://brianb12321.itch.io/super-breakout-revolution-7)
+
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white)
+![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
+
 Welcome to the official repo of SBR7.
 ## What is SBR7
 Have you played breakout on your phone, computer, Atari 2600, Switch, etc? SBR7 is a remake of the classic, beloved game.

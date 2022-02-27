@@ -62,7 +62,7 @@ public class Player extends Box2dSprite {
         return ballBody;
     }
     public void setIsAttached() {
-        if(isAttached == true) {
+        if(isAttached) {
             isAttached = false;
             ballBody.setType(BodyType.DynamicBody);
             getBallBody().applyForceToCenter(new Vector2(0, 63), true);

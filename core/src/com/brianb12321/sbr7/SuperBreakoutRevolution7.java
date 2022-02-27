@@ -6,6 +6,10 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Music.OnCompletionListener;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.brianb12321.sbr7.screens.GameOverScreen;
 import com.brianb12321.sbr7.screens.LevelScreen;
 import com.brianb12321.sbr7.screens.TitleScreen;
@@ -52,7 +56,12 @@ public class SuperBreakoutRevolution7 extends Game {
                         @Override
                         public void onCompletion(Music music) {
                             Gdx.app.log("Game", "Time ran out!!");
-                            ((Game)Gdx.app.getApplicationListener()).setScreen(new GameOverScreen(batch, camera, manager, stateManager));
+                            GameOverScreen gameOverScreen = new GameOverScreen();
+                            gameOverScreen.spriteBatch = batch;
+                            gameOverScreen.resourceManager = manager;
+                            gameOverScreen.camera = camera;
+                            gameOverScreen.stateManager = stateManager;
+                            ((Game)Gdx.app.getApplicationListener()).setScreen(gameOverScreen);
                         }
                     });
                     m.play();
@@ -65,7 +74,7 @@ public class SuperBreakoutRevolution7 extends Game {
 
             manager.addTexture("paddle", "img/paddleNormal.png");
             manager.addTexture("ball", "img/ballNormal.png");
-            manager.addTexture("powerUp_speed", "img/powerUps/speedPowerup.png");
+            manager.addTexture("powerUp_speed", "img/powerUps/speedPowerUp.png");
             manager.addLevelFile("raw/level1.tmx");
             manager.addLevelFile("raw/level2.tmx");
             manager.addLevelFile("raw/level3.tmx");
@@ -86,15 +95,21 @@ public class SuperBreakoutRevolution7 extends Game {
             batch = new SpriteBatch();
             camera = new OrthographicCamera();
             camera.setToOrtho(false, GameDetails.WIDTH, GameDetails.HEIGHT);
+            batch.setProjectionMatrix(camera.combined);
             Music m = manager.getMusic("bg1");
             m.setLooping(true);
             m.setVolume(GameDetails.VOLUME);
             m.play();
-            super.setScreen(new TitleScreen(batch, camera, manager, stateManager));
+            TitleScreen titleScreen = new TitleScreen();
+            titleScreen.spriteBatch = batch;
+            titleScreen.resourceManager = manager;
+            titleScreen.stateManager = stateManager;
+            titleScreen.camera = camera;
+            super.setScreen(titleScreen);
 	}
 
 	@Override
-	public void render () { 
+	public void render () {
             super.render();
 	}
 	
@@ -102,16 +117,17 @@ public class SuperBreakoutRevolution7 extends Game {
 	public void dispose () {
             super.dispose();
 	}
-        @Override
-        public void resize(int width, int height) {
-            super.resize(width, height);
-        }
-        @Override
-        public void pause() {
-            super.pause();
-        }
-        @Override
-        public void resume() {
-            super.resume();
-        }
+    @Override
+    public void resize(int width, int height) {
+	    super.resize(width, height);
+	    super.screen.resize(width, height);
+    }
+    @Override
+    public void pause() {
+        super.pause();
+    }
+    @Override
+    public void resume() {
+        super.resume();
+    }
 }

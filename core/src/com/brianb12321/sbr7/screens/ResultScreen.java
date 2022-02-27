@@ -6,27 +6,21 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.brianb12321.sbr7.GameScreen;
 import com.brianb12321.sbr7.LevelStateManager;
 import com.brianb12321.sbr7.ResourceManager;
 
-public class ResultScreen implements Screen {
+public class ResultScreen extends GameScreen {
 
     private int currentNumber;
-    private ResourceManager manager;
-    private OrthographicCamera cam;
-    private SpriteBatch batch;
-    private LevelStateManager stateManager;
-    public ResultScreen(int num, ResourceManager m, OrthographicCamera c, SpriteBatch b, LevelStateManager lm) {
+    public ResultScreen(GameScreen parent, int num) {
+        super(parent);
         currentNumber = num;
-        stateManager = lm;
-        manager = m;
-        cam = c;
-        batch = b;
     }
     @Override
     public void show() {
-        if(manager.hasLevelNumber(currentNumber + 1)) {
-            ((Game)Gdx.app.getApplicationListener()).setScreen(new LevelScreen(batch, manager, cam, currentNumber + 1, stateManager));
+        if(resourceManager.hasLevelNumber(currentNumber + 1)) {
+            ((Game)Gdx.app.getApplicationListener()).setScreen(new LevelScreen(this, currentNumber + 1));
         }
         else {
             Gdx.app.log("Game", "Out of levels.");
